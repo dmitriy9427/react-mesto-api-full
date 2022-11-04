@@ -1,0 +1,36 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "project13",
+  "main": "app.js",
+  "scripts": {
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmitriy9427/express-mesto-gha.git"
+  },
+  "author": "Dmitriy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmitriy9427/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/dmitriy9427/express-mesto-gha/issues#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "celebrate": "^15.0.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.5",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.20"
+  }
+}
+
