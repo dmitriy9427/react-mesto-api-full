@@ -1,4 +1,4 @@
-export const URL = "https://auth.nomoreparties.co";
+export const URL = "https://domainname.ryabov1994.nomoredomains.icu";
 
 function checkResponse(res) {
   if (res.ok) {

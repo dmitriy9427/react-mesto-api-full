@@ -7,14 +7,15 @@ const NotFound = require('./errors/NotFound');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { registerValid, loginValid } = require('./middlewares/joi');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(requestLogger);
 // логин
 app.post('/signin', loginValid, login);
 
@@ -23,12 +24,14 @@ app.post('/signup', registerValid, createUser);
 
 app.use(auth);
 
-app.use(routesUsers);
-app.use(routesCards);
+app.use('/users', routesUsers);
+app.post('/posts', routesCards);
 
 app.use(() => {
   throw new NotFound('Запрашиваемый ресурс не найден');
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
@@ -42,6 +45,7 @@ app.use((err, req, res, next) => {
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 app.listen(PORT, () => {
