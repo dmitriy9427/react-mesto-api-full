@@ -112,5 +112,8 @@ class Api {
 }
 
 export const api = new Api({
-  Url: "https://domainname.ryabov1994.nomoredomains.icu",
+  Url: "http://domainname.ryabovdima.nomoredomains.icu",
+  headers: {
+   "Access-Control-Allow-Origin": "*"
+  }
 });
