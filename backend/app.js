@@ -1,21 +1,34 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const routesUsers = require('./routes/users');
 const routesCards = require('./routes/cards');
 const NotFound = require('./errors/NotFound');
 const { createUser, login } = require('./controllers/users');
+const cors = require('./middlewares/cors');
 const auth = require('./middlewares/auth');
 const { registerValid, loginValid } = require('./middlewares/joi');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use(requestLogger);
+app.use(cors);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger); // подключаем логгер запросов
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 // логин
 app.post('/signin', loginValid, login);
 
@@ -24,24 +37,20 @@ app.post('/signup', registerValid, createUser);
 
 app.use(auth);
 
-app.use('/users', routesUsers);
-app.post('/posts', routesCards);
+// роуты защищенные авторизацией
+app.use(routesUsers);
+app.use(routesCards);
 
 app.use(() => {
   throw new NotFound('Запрашиваемый ресурс не найден');
 });
 
-app.use(errorLogger);
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors());
 
 // централизованный обработчик ошибок
-app.use((err, req, res, next) => {
-  const status = err.statusCode || 500;
-  const message = status === 500 ? 'На сервере произошла ошибка' : err.message;
-  res.status(status).send({ message });
-  next();
-});
+app.use(errorHandler);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -49,5 +58,5 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.listen(PORT, () => {
-  console.log(`Сервер работает на ${PORT} порту`);
+  console.log(`Сервер запущен, использован порт: ${PORT}`);
 });
