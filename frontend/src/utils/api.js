@@ -112,5 +112,5 @@ class Api {
 }
 
 export const api = new Api({
-  Url: "http://domainname.ryabovdima.nomoredomains.icu",
+  Url: "https://domainname.ryabovdima.nomoredomains.icu",
 });
