@@ -1,8 +1,10 @@
 const allowedCors = [
-  "http://localhost:3000",
-  "http://localhost:3001",
+  "https://localhost:3000",
+  "https://localhost:3001",
   "https://domainname.ryabov1994.nomoredomains.icu",
+  "http://domainname.ryabov1994.nomoredomains.icu"
   "https://domainname.ryabovdima.nomoredomains.icu",
+  "http://domainname.ryabovdima.nomoredomains.icu"
 ];
 
 const cors = (req, res, next) => {
