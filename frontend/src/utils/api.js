@@ -37,7 +37,7 @@ class Api {
   }
 
   //редактирование профиля
-  editProfile(name, about) {
+  editProfile(data) {
     return fetch(`${this._Url}/users/me`, {
       credentials: "include",
       method: "PATCH",
@@ -47,14 +47,14 @@ class Api {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
-        name,
-        about,
+        name: data.name,
+        about: data.about,
       }),
     }).then(this._checkResponse);
   }
 
   //добавление новых карточек
-  addNewCard(name, link) {
+  addNewCard(data) {
     return fetch(`${this._Url}/cards`, {
       credentials: "include",
       method: "POST",
@@ -64,8 +64,8 @@ class Api {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
-        name,
-        link,
+        name: data.name,
+        link: data.link,
       }),
     }).then(this._checkResponse);
   }
@@ -112,5 +112,8 @@ class Api {
 }
 
 export const api = new Api({
-  Url: "https://domainname.ryabov1994.nomoredomains.icu",
+  Url: "https://domainname.ryabovdima.nomoredomains.icu",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
