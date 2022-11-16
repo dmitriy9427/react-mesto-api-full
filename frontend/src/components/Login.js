@@ -39,7 +39,7 @@ function Login(props) {
           onChange={handlePasswordInput}
           required
         />
-        <button className="button  login__button" type="submit">
+        <button className="button login__button" type="submit">
           Войти
         </button>
       </form>

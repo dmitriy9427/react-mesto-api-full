@@ -1,0 +1,8 @@
+.elements__delete_hidden{
+    opacity: 0;
+}
+
+.elements__delete_hidden:hover{
+    opacity: 0;
+    cursor: pointer;
+}

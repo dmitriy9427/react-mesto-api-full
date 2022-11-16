@@ -120,8 +120,12 @@ function App() {
   }
 
   const handleCardDelete = (card) => {
-    setIsRemoveCardPopupOpened(true);
-    setCardTodelete(card);
+    api
+      .deleteCard(card._id)
+      .then(() =>
+        setCards((state) => state.filter((c) => c._id !== card._id && c))
+      )
+      .catch(console.log);
   };
 
   function closeAllPopups() {
@@ -136,7 +140,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
@@ -163,7 +167,7 @@ function App() {
 
   function handleUpdateUser(user) {
     api
-      .editProfile(user.name, user.about)
+      .editProfile(user)
       .then((editUserInfo) => {
         setCurrentUser({
           ...currentUser,
@@ -190,7 +194,7 @@ function App() {
 
   function handleAddNewCard(card) {
     api
-      .addNewCard(card.name, card.link)
+      .addNewCard(card)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -219,6 +223,7 @@ function App() {
     isAddPlacePopupOpen,
     isEditAvatarPopupOpen,
     isImagePopupOpen,
+    closeByEsc,
   ]);
 
   return (
