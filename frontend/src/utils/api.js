@@ -112,8 +112,5 @@ class Api {
 }
 
 export const api = new Api({
-  Url: "https://domainname.ryabovdima.nomoredomains.icu",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  Url: 'https://domainname.ryabov1994.nomoredomains.icu',
 });

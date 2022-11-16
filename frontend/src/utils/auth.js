@@ -1,4 +1,4 @@
-export const URL = 'https://domainname.ryabovdima.nomoredomains.icu';
+export const URL = 'https://domainname.ryabov1994.nomoredomains.icu';
 
 function checkResponse(res) {
   if (res.ok) {
