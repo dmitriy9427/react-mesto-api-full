@@ -3,8 +3,8 @@ const allowedCors = [
   'https://localhost:3002',
   'https://domainname.ryabovdima.nomoredomains.icu',
   'https://domainname.ryabov1994.nomoredomains.icu',
-  'http://domainname.ryabovdima.nomoredomains.icu',
-  'http://domainname.ryabov1994.nomoredomains.icu',
+  // 'http://domainname.ryabovdima.nomoredomains.icu',
+  // 'http://domainname.ryabov1994.nomoredomains.icu',
 ];
 
 const cors = (req, res, next) => {
