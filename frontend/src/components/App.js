@@ -69,11 +69,9 @@ function App() {
     if (jwt) {
       getToken(jwt)
         .then((res) => {
-          if (res) {
             setLoggedIn(true);
             setEmailName(res.data.email);
             navigate("/");
-          }
         })
         .catch(console.log);
     }
