@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
-const Unauthorized = require("../errors/Unauthorized");
-const BadRequest = require("../errors/BadRequest");
-const Conflict = require("../errors/Conflict");
-const NotFound = require("../errors/NotFound");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const Unauthorized = require('../errors/Unauthorized');
+const BadRequest = require('../errors/BadRequest');
+const Conflict = require('../errors/Conflict');
+const NotFound = require('../errors/NotFound');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -16,19 +16,19 @@ module.exports.getAllUsers = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   bcrypt
     .hash(password, 10)
-    .then((hash) =>
-      User.create({
-        name,
-        about,
-        avatar,
-        email,
-        password: hash,
-      })
-    )
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => {
       res.status(200).send({
         name: user.name,
@@ -38,10 +38,10 @@ module.exports.createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new BadRequest("Переданы некорректные данные."));
+      if (err.name === 'ValidationError') {
+        next(new BadRequest('Переданы некорректные данные.'));
       } else if (err.code === 11000) {
-        next(new Conflict("Пользователь с таким email уже зарегистрирован"));
+        next(new Conflict('Пользователь с таким email уже зарегистрирован'));
       } else {
         next(err);
       }
@@ -55,13 +55,13 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === "production" ? JWT_SECRET : "some-secret-key",
-        { expiresIn: "7d" }
+        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+        { expiresIn: '7d' },
       );
       res.send({ token });
     })
     .catch(() => {
-      next(new Unauthorized("Необходима авторизация"));
+      next(new Unauthorized('Необходима авторизация'));
     });
 };
 
@@ -71,8 +71,8 @@ module.exports.getCurrentUser = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new BadRequest("Переданы некорректные данные."));
+      if (err.name === 'CastError') {
+        next(new BadRequest('Переданы некорректные данные.'));
       } else {
         next(err);
       }
@@ -82,14 +82,14 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      throw new NotFound("Пользователь не найден");
+      throw new NotFound('Пользователь не найден');
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new BadRequest("Переданы некорректные данные"));
+      if (err.name === 'CastError') {
+        next(new BadRequest('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -102,18 +102,18 @@ module.exports.updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .orFail(() => {
-      throw new NotFound("Пользователь по указанному _id не найден");
+      throw new NotFound('Пользователь по указанному _id не найден');
     })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === "ValidationError" || err.name === "CastError") {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(
           new BadRequest(
-            `Переданы некорректные данные при обновлении профиля -- ${err.name}`
-          )
+            `Переданы некорректные данные при обновлении профиля -- ${err.name}`,
+          ),
         );
       } else {
         next(err);
@@ -127,18 +127,18 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .orFail(() => {
-      throw new NotFound("Пользователь с указанным _id не найден");
+      throw new NotFound('Пользователь с указанным _id не найден');
     })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === "ValidationError" || err.name === "CastError") {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(
           new BadRequest(
-            `Переданы некорректные данные при обновлении профиля -- ${err.name}`
-          )
+            `Переданы некорректные данные при обновлении профиля -- ${err.name}`,
+          ),
         );
       } else {
         next(err);
