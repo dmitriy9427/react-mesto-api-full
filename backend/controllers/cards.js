@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const Cards = require('../models/card');
 const NotFound = require('../errors/NotFound');
 const BadRequest = require('../errors/BadRequest');
@@ -11,6 +12,7 @@ module.exports.getAllCards = (req, res, next) => {
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
+  // eslint-disable-next-line no-underscore-dangle
   const ownerId = req.user._id;
   Cards.create({ name, link, owner: ownerId })
     .then((card) => {
@@ -34,8 +36,9 @@ module.exports.deleteCardById = (req, res, next) => {
       if (card.owner._id.toString() !== req.user._id.toString()) {
         throw new ForbiddenError('Вы не можете удалить чужую карточку');
       }
-      card.remove();
-      res.send({ data: card, message: 'Карточка успешно удалена' });
+      return card
+        .remove()
+        .then(() => res.send({ message: 'Карточка удалена' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {

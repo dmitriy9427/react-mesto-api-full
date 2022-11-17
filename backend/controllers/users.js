@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
@@ -17,19 +18,8 @@ module.exports.getAllUsers = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
 
-  User.findOne({ email })
-    // eslint-disable-next-line consistent-return
-    .then((user) => {
-      if (user) {
-        next(
-          new Conflict(
-            `Пользователь с таким email ${email} уже зарегистрирован`
-          )
-        );
-      } else {
-        return bcrypt.hash(password, 10);
-      }
-    })
+  bcrypt
+    .hash(password, 10)
     .then((hash) =>
       User.create({
         name,
@@ -40,13 +30,18 @@ module.exports.createUser = (req, res, next) => {
       })
     )
     .then((user) => {
-      const newUser = { ...user.toJSON() };
-      delete newUser.password;
-      res.send(newUser);
+      res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
         next(new BadRequest("Переданы некорректные данные."));
+      } else if (err.code === 11000) {
+        next(new Conflict("Пользователь с таким email уже зарегистрирован"));
       } else {
         next(err);
       }
